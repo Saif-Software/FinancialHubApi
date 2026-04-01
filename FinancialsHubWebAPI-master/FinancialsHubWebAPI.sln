@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialsHubWebAPI", "FinancialsHubWebAPI.csproj", "{ABB5D8CF-71F9-49D7-AC4C-E2442851EC62}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABB5D8CF-71F9-49D7-AC4C-E2442851EC62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABB5D8CF-71F9-49D7-AC4C-E2442851EC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABB5D8CF-71F9-49D7-AC4C-E2442851EC62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABB5D8CF-71F9-49D7-AC4C-E2442851EC62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {777D48F8-FB75-45D0-9004-F9C53F8C13A9}
+	EndGlobalSection
+EndGlobal
