@@ -1,7 +1,10 @@
 
 using FinancialsHubWebAPI.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace FinancialsHubWebAPI
 {
@@ -24,82 +27,52 @@ namespace FinancialsHubWebAPI
             // Register repositories
             builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             builder.Services.AddScoped<ITransactionReportRepo, TransactionReportRepo>();
-
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
             // CORS - allow frontend origin
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowFrontend", policy =>
-                {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                });
+                options.AddPolicy("AllowVercel",
+                    policy =>
+                    {
+                        policy.WithOrigins("https://fainancial.vercel.app", "https://fainancial-hubbb-main.vercel.app", "http://localhost:3000") // اسمح بالفيرسل واللوكال هوست
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
             });
+
+
 
             var app = builder.Build();
 
-            // ── Schema migration: add missing columns via raw ADO.NET ──
-            // This runs BEFORE EF Core touches the TransactionReport table
-            var connString = builder.Configuration.GetConnectionString("DefaultConnection");
-            using (var conn = new SqlConnection(connString))
+
+          
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                await conn.OpenAsync();
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FinancialsHub API V1");
+                c.RoutePrefix = "swagger"; // أو جربها string.Empty لو عايزه على الـ root
+            });
 
-                // Add CategoryId column
-                using (var cmd1 = conn.CreateCommand())
-                {
-                    cmd1.CommandText = @"
-                        IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID('TransactionReport') AND name = 'CategoryId')
-                            ALTER TABLE TransactionReport ADD CategoryId BIGINT NULL;";
-                    await cmd1.ExecuteNonQueryAsync();
-                }
-
-                // Add CreatedAt column
-                using (var cmd2 = conn.CreateCommand())
-                {
-                    cmd2.CommandText = @"
-                        IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID('TransactionReport') AND name = 'CreatedAt')
-                            ALTER TABLE TransactionReport ADD CreatedAt DATETIME NULL DEFAULT GETDATE();";
-                    await cmd2.ExecuteNonQueryAsync();
-                }
-
-                // Backfill CreatedAt for existing rows (separate batch so column is visible)
-                using (var cmd3 = conn.CreateCommand())
-                {
-                    cmd3.CommandText = "UPDATE TransactionReport SET CreatedAt = GETDATE() WHERE CreatedAt IS NULL;";
-                    await cmd3.ExecuteNonQueryAsync();
-                }
-
-                // Add FK constraint
-                using (var cmd4 = conn.CreateCommand())
-                {
-                    cmd4.CommandText = @"
-                        IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'FK_TransactionReport_Category')
-                            ALTER TABLE TransactionReport ADD CONSTRAINT FK_TransactionReport_Category
-                                FOREIGN KEY (CategoryId) REFERENCES Category(Id);";
-                    await cmd4.ExecuteNonQueryAsync();
-                }
-            }
-
-            // Seed test data (now safe because the columns exist)
-            using (var scope = app.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                await DbSeeder.SeedAsync(dbContext);
-            }
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
 
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 
-            app.UseCors("AllowFrontend");
+            app.UseCors("AllowVercel");
 
             app.UseAuthorization();
 

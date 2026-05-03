@@ -42,37 +42,28 @@ namespace FinancialsHubWebAPI
                 }
 
                 // ── 3. Seed Accounts ────────────────────────────
-                if (!await context.Accounts.AnyAsync())
+                if (!await context.TransictionAccounts.AnyAsync())
                 {
                     await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Account ON");
-                    context.Accounts.AddRange(
-                        new Account
+                    context.TransictionAccounts.AddRange(
+                        new TransictionAccount
                         {
                             Id = 1,
-                            NationalId = "1234567890",
                             PasswordHash = "hashed_password_1",
                             Email = "ahmed.yahya@example.com",
-                            Phone = "0501234567",
-                            RoleId = 1,
+                 
                             FullNameEn = "Ahmed Yahya",
                             FullNameAr = "أحمد يحيى",
                             IsActive = true,
-                            StatusId = 1,
-                            CreatedAt = DateOnly.FromDateTime(DateTime.Now)
                         },
-                        new Account
+                        new TransictionAccount
                         {
                             Id = 2,
-                            NationalId = "0987654321",
                             PasswordHash = "hashed_password_2",
                             Email = "sara.ali@example.com",
-                            Phone = "0509876543",
-                            RoleId = 2,
                             FullNameEn = "Sara Ali",
                             FullNameAr = "سارة علي",
                             IsActive = true,
-                            StatusId = 1,
-                            CreatedAt = DateOnly.FromDateTime(DateTime.Now)
                         }
                     );
                     await context.SaveChangesAsync();
@@ -140,7 +131,7 @@ namespace FinancialsHubWebAPI
                         new TransactionRecord
                         {
                             Id = 1,
-                            TransactionDate = new DateOnly(2026, 1, 5),
+                            TransactionDate = new DateTime(2026, 1, 5),
                             TransactionReportId = 1,
                             CategoryId = 1,
                             Amount = 250.00m,
@@ -149,7 +140,7 @@ namespace FinancialsHubWebAPI
                         new TransactionRecord
                         {
                             Id = 2,
-                            TransactionDate = new DateOnly(2026, 1, 10),
+                            TransactionDate = new DateTime(2026, 1, 10),
                             TransactionReportId = 1,
                             CategoryId = 1,
                             Amount = 150.00m,
@@ -158,7 +149,7 @@ namespace FinancialsHubWebAPI
                         new TransactionRecord
                         {
                             Id = 3,
-                            TransactionDate = new DateOnly(2026, 2, 1),
+                            TransactionDate = new DateTime(2026, 2, 1),
                             TransactionReportId = 2,
                             CategoryId = 2,
                             Amount = 500.00m,
@@ -167,7 +158,7 @@ namespace FinancialsHubWebAPI
                         new TransactionRecord
                         {
                             Id = 4,
-                            TransactionDate = new DateOnly(2026, 2, 3),
+                            TransactionDate = new DateTime(2026, 2, 3),
                             TransactionReportId = 2,
                             CategoryId = 2,
                             Amount = 320.50m,
@@ -176,7 +167,7 @@ namespace FinancialsHubWebAPI
                         new TransactionRecord
                         {
                             Id = 5,
-                            TransactionDate = new DateOnly(2026, 2, 5),
+                            TransactionDate = new DateTime(2026, 2, 5),
                             TransactionReportId = 2,
                             CategoryId = 6,
                             Amount = 180.00m,
@@ -185,7 +176,7 @@ namespace FinancialsHubWebAPI
                         new TransactionRecord
                         {
                             Id = 6,
-                            TransactionDate = new DateOnly(2026, 2, 15),
+                            TransactionDate = new DateTime(2026, 2, 15),
                             TransactionReportId = 3,
                             CategoryId = 5,
                             Amount = 3000.00m,
@@ -194,7 +185,7 @@ namespace FinancialsHubWebAPI
                         new TransactionRecord
                         {
                             Id = 7,
-                            TransactionDate = new DateOnly(2026, 2, 15),
+                            TransactionDate = new DateTime(2026, 2, 15),
                             TransactionReportId = 3,
                             CategoryId = 5,
                             Amount = 2500.00m,

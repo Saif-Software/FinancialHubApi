@@ -7,7 +7,7 @@ public partial class TransactionRecord
 {
     public long Id { get; set; }
 
-    public DateOnly? TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     public long? TransactionReportId { get; set; }
 

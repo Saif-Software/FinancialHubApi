@@ -18,9 +18,13 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<AbsenceRecord> AbsenceRecords { get; set; }
 
-    public virtual DbSet<Account> Accounts { get; set; }
+    public virtual DbSet<Account> TransictionAccount { get; set; }
 
     public virtual DbSet<AccountRole> AccountRoles { get; set; }
+    public virtual DbSet<NotificationFinance> NotificationFinancess { get; set; }
+    public virtual DbSet<TransictionAccount> TransictionAccounts { get; set; }
+
+
 
     public virtual DbSet<AccountTemp> AccountTemps { get; set; }
 
@@ -80,7 +84,6 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Medium> Media { get; set; }
 
-    public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Project> Projects { get; set; }
 
